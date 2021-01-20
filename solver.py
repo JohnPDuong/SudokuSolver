@@ -4,7 +4,7 @@ def find_next_space (puzzle):
     for row in range(9): #0 to 8
         for col in range(9):
             if puzzle[row][col] == -1:
-                return r, col
+                return row, col
     
     return None, None
 
@@ -27,8 +27,10 @@ def is_valid(puzzle, guess, row, col):
 
     for r in range(row_start, row_start + 3):
         for c in range(col_start, col_start + 3):
-            if puzzle[r][c] == -1:
-                return r, c
+            if puzzle[r][c] == guess:
+                return False
+
+    return True
 
 #primary function
 def solve(puzzle):
@@ -39,4 +41,35 @@ def solve(puzzle):
 
     for guess in range(1, 10):
         if is_valid(puzzle, guess, row, col):
-    
+            puzzle[row][col] = guess
+
+            if solve(puzzle):
+                return True
+
+        puzzle[row][col] = -1
+    return False
+
+problem = [
+        [1, 2, 3,   4, 5, 6,   7, 8, 9],
+        [-1, -1, -1,   -1, -1, -1,   -1, -1, -1],
+        [-1, -1, -1,   -1, -1, -1,   -1, -1, -1],
+
+        [-1, -1, -1,   -1, -1, -1,   -1, -1, -1],
+        [-1, -1, -1,   -1, -1, -1,   -1, -1, -1],
+        [-1, -1, -1,   -1, -1, -1,   -1, -1, -1],
+
+        [-1, -1, -1,   -1, -1, -1,   -1, -1, -1],
+        [-1, -1, -1,   -1, -1, -1,   -1, -1, -1],
+        [-1, -1, -1,   -1, -1, -1,   -1, -1, -1]
+        ]
+print(solve(problem))
+
+for row in range(9):
+    for col in range(9):
+        print(problem[row][col], end = '')
+        if col == 2 or col == 5:
+            print('|', end = '')
+        elif col == 8:
+            print("")
+    if row < 8:
+        print('---|---|---')
