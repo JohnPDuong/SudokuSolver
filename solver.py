@@ -66,10 +66,10 @@ print(solve(problem))
 
 for row in range(9):
     for col in range(9):
-        print(problem[row][col], end = '')
+        print(problem[row][col], " ", end = '')
         if col == 2 or col == 5:
-            print('|', end = '')
+            print("| ", end = '')
         elif col == 8:
             print("")
     if row < 8:
-        print('---|---|---')
+        print("---------|----------|---------")
