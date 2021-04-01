@@ -1,4 +1,5 @@
 import pygame
+import button
 
 pygame.init()
 
@@ -26,57 +27,30 @@ IN_PROGRESS = pygame.font.Font.render (FONT, "Solving...", True, BLACK)
 FINISHED = pygame.font.Font.render (FONT, "Puzzle solved!", True, BLACK)
 INVALID = pygame.font.Font.render (FONT, "Puzzle cannot be solved.", True, BLACK)
 
-#Button
-class button():
-    def __init__(self, color, x, y, width, height, text=''):
-        self.color = color
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.text = text
-
-    def draw(self,win,outline=None):
-        #Call this method to draw the button on the screen
-        if outline:
-            pygame.draw.rect(win, outline, (self.x-2,self.y-2,self.width+4,self.height+4),0)
-            
-        pygame.draw.rect(win, self.color, (self.x,self.y,self.width,self.height),0)
-        
-        if self.text != '':
-            font = pygame.font.SysFont('comicsans', 60)
-            text = font.render(self.text, 1, (0,0,0))
-            win.blit(text, (self.x + (self.width/2 - text.get_width()/2), self.y + (self.height/2 - text.get_height()/2)))
-
-    def isOver(self, pos):
-        #Pos is the mouse position or a tuple of (x,y) coordinates
-        if pos[0] > self.x and pos[0] < self.x + self.width:
-            if pos[1] > self.y and pos[1] < self.y + self.height:
-                return True
-            
-        return False
-
 solve_button = button (GRAY, 675, 910, 150, 80, "Solve")
 
 #Will be called numerous of times to update the window
 def draw_window():
     WINDOW.fill(WHITE)
     pygame.draw.line(WINDOW, BLACK, (0, 900), (1000, 900), 1)
-    draw_text(PROMPT)
-    solve_button.draw (WINDOW, 2)
-    draw_grid()
 
+#draws rectangles
 def draw_grid():
     for x in range(9):
         for y in range(9):
             pygame.draw.rect (WINDOW, BLACK, pygame.Rect(x*100, y*100, 100, 100), 2)
-    
-def draw_text(message_text):
-    WINDOW.blit (PROMPT, TEXT_LOCATION)
+
+#reusable draw text by passing in text displays
+def draw_text(text):
+    WINDOW.blit (text, TEXT_LOCATION)
     
 def main():
-    clock = pygame.time.Clock()
+    #updates every 1/60th of a second
+    clock = pygame.time.Clock(FPS)
+    
     run = True;
+    solving = False;
+    text = PROMPT
     
     while run:
         clock.tick(FPS)
@@ -89,7 +63,7 @@ def main():
             
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if solve_button.isOver(pos):
-                    print ("Omg you clicked me!")
+                    solving = True
                     
             if event.type == pygame.MOUSEMOTION:
                 if solve_button.isOver(pos):
@@ -98,7 +72,13 @@ def main():
                     solve_button.color = WHITE
         
         draw_window()
+        draw_grid()
         
+        if (solving):
+            text = IN_PROGRESS
+            
+        draw_text(text)
+        solve_button.draw(WINDOW, 2)
         pygame.display.update()
         
     pygame.quit ()
