@@ -1,3 +1,5 @@
+import pygame
+
 #returns the row, col for the next empty space in grid
 #returns None, None if there are no empty spaces
 def find_next_space (puzzle):
@@ -32,7 +34,7 @@ def is_valid(puzzle, guess, row, col):
 
     return True
 
-#primary function
+#primary function that solves the problem
 def solve(puzzle):
     row, col = find_next_space (puzzle)
 
@@ -62,7 +64,8 @@ problem = [
         [-1, -1, -1,   -1, -1, -1,   -1, -1, -1],
         [-1, -1, -1,   -1, -1, -1,   -1, -1, -1]
         ]
-print(solve(problem))
+
+solve(problem)
 
 for row in range(9):
     for col in range(9):
